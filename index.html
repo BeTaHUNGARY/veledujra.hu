@@ -3,11 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pálma és Tomi</title>
-    <!-- FontAwesome Ikonok -->
+    <title>Pálma és Tomi ❤️ veledujra.hu</title>
+    
+    <!-- Oldal ikona (Favicon) -->
+    <link rel="icon" type="image/png" href="veledujra.png">
+    <meta property="og:image" content="veledujra.png">
+
+    <!-- FontAwesome & Google Fonts -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
     <style>
         :root {
             --bg-dark: #0f0c1b;
@@ -22,25 +27,29 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Outfit', sans-serif; }
         body { background-color: var(--bg-dark); color: var(--text-light); min-height: 100vh; overflow-x: hidden; }
 
-        /* INTRO ANIMÁCIÓ */
+        /* INTRO ANIMÁCIÓ (P + T SZÍV DOBBANÁS) */
         #intro-overlay {
             position: fixed; inset: 0; background: var(--bg-dark); z-index: 9999;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            display: flex; align-items: center; justify-content: center;
         }
-        .heart-svg { width: 180px; height: 180px; }
-        .heart-path {
-            fill: none; stroke: var(--accent-pink); stroke-width: 4;
-            stroke-dasharray: 500; stroke-dashoffset: 500;
-            animation: drawHeart 2.5s ease-in-out forwards;
+        .heart-wrapper {
+            position: relative; display: flex; align-items: center; justify-content: center;
+            animation: heartBeat 1.2s infinite ease-in-out;
         }
+        .heart-svg { width: 220px; height: 220px; fill: var(--accent-pink); filter: drop-shadow(0 0 20px rgba(236, 72, 153, 0.8)); }
         .intro-text {
-            font-size: 3rem; font-weight: 700; color: var(--text-light);
-            margin-top: -110px; margin-bottom: 80px;
-            text-shadow: 0 0 15px rgba(236, 72, 153, 0.6);
+            position: absolute; font-size: 2.2rem; font-weight: 700; color: #fff;
+            text-shadow: 0 0 10px rgba(0,0,0,0.5); pointer-events: none;
         }
-        @keyframes drawHeart { to { stroke-dashoffset: 0; } }
+        @keyframes heartBeat {
+            0% { transform: scale(1); }
+            14% { transform: scale(1.15); }
+            28% { transform: scale(1); }
+            42% { transform: scale(1.15); }
+            70% { transform: scale(1); }
+        }
 
-        /* LGIN / DÁTUM KAPU */
+        /* LOGIN / DÁTUM KAPU */
         #login-screen {
             display: none; position: fixed; inset: 0; background: var(--bg-dark);
             z-index: 8888; flex-direction: column; align-items: center; justify-content: center; gap: 20px;
@@ -62,13 +71,10 @@
         }
         .btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(236, 72, 153, 0.4); }
 
-        /* PIPÁLÁS SIKER ANIMÁCIÓ */
-        .check-anim {
-            display: none; font-size: 4rem; color: #10b981; animation: popIn 0.5s ease;
-        }
+        .check-anim { display: none; font-size: 4rem; color: #10b981; animation: popIn 0.5s ease; }
         @keyframes popIn { 0% { transform: scale(0); } 80% { transform: scale(1.2); } 100% { transform: scale(1); } }
 
-        /* FŐOLDAL KINÉZET */
+        /* FŐOLDAL */
         #main-app { display: none; padding: 20px; max-width: 1400px; margin: 0 auto; }
         
         header {
@@ -97,14 +103,12 @@
         }
         .user-btn.active { background: var(--accent-purple); font-weight: bold; }
 
-        /* PROFIL STATISZTIKA */
         .stats-bar {
             display: flex; gap: 20px; justify-content: center; margin-bottom: 25px;
             background: var(--card-bg); padding: 15px; border-radius: 15px;
         }
         .stat-item { font-size: 1.1rem; }
 
-        /* NAPTÁR FELSŐ LÉPTETŐ */
         .calendar-controls {
             display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;
         }
@@ -113,10 +117,7 @@
             width: 40px; height: 40px; border-radius: 50%; cursor: pointer; font-size: 1.2rem;
         }
 
-        /* HETI NAPTÁR GRID */
-        .week-grid {
-            display: grid; grid-template-columns: repeat(7, 1fr); gap: 15px; margin-bottom: 30px;
-        }
+        .week-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 15px; margin-bottom: 30px; }
         @media(max-width: 1024px) { .week-grid { grid-template-columns: 1fr; } }
 
         .day-card {
@@ -147,11 +148,9 @@
         }
         .add-note-btn:hover { border-color: var(--accent-pink); color: var(--accent-pink); }
 
-        /* DÍNO DEKORÁCIÓK */
         .dino-icon { position: fixed; bottom: 20px; right: 20px; font-size: 3rem; opacity: 0.8; pointer-events: none; }
         .dino-left { position: fixed; bottom: 20px; left: 20px; font-size: 2.5rem; opacity: 0.8; pointer-events: none; }
 
-        /* HÓNAP NÉZET MODAL */
         #month-modal {
             display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8);
             z-index: 7777; align-items: center; justify-content: center;
@@ -169,20 +168,22 @@
 </head>
 <body>
 
-    <!-- 1. INTRO ANIMÁCIÓ -->
+    <!-- 1. INTRO ANIMÁCIÓ (P + T PONTOSAN A SZÍV KÖZEPÉN) -->
     <div id="intro-overlay">
-        <svg class="heart-svg" viewBox="0 0 32 32">
-            <path class="heart-path" d="M16,28.2 C16,28.2 3,21.2 3,11.5 C3,6.8 6.8,3 11.5,3 C14.1,3 16,4.5 16,4.5 C16,4.5 17.9,3 20.5,3 C25.2,3 29,6.8 29,11.5 C29,21.2 16,28.2 16,28.2 Z"/>
-        </svg>
-        <div class="intro-text">P & T</div>
+        <div class="heart-wrapper">
+            <svg class="heart-svg" viewBox="0 0 24 24">
+                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+            </svg>
+            <div class="intro-text">P + T</div>
+        </div>
     </div>
 
-    <!-- 2. BELÉPTETŐ KÉPERNYŐ -->
+    <!-- 2. BELÉPTETŐ KÉPERNYŐ (MAI DÁTUM ALAPÉRTELMEZETTEN) -->
     <div id="login-screen">
         <div class="login-box">
             <h2>Mikor kezdődött? ❤️</h2>
             <p style="color: var(--text-muted); margin-bottom: 15px;">Válaszd ki a dátumot a belépéshez!</p>
-            <input type="date" id="login-date" class="date-input" value="2022-10-26">
+            <input type="date" id="login-date" class="date-input">
             <br>
             <button class="btn" onclick="checkLogin()">Belépés</button>
             <div id="login-check-anim" class="check-anim" style="margin-top: 15px;">
@@ -199,9 +200,7 @@
                 <div class="logo-text">Pálma és Tomi</div>
             </div>
 
-            <div class="top-counter" id="main-countdown">
-                365 napból 365 maradt
-            </div>
+            <div class="top-counter" id="main-countdown">365 napból 365 maradt</div>
 
             <div class="user-selector">
                 <span style="font-size: 0.9rem; color: var(--text-muted);">Ki vagy most?</span>
@@ -210,13 +209,11 @@
             </div>
         </header>
 
-        <!-- KÜLÖN RANGSORMÉRŐ -->
         <div class="stats-bar">
             <div class="stat-item">🦖 <b>Tomi:</b> <span id="stat-tomi">0</span> napot pipált ki</div>
             <div class="stat-item" style="border-left: 1px solid rgba(255,255,255,0.1); padding-left: 20px;">🦕 <b>Pálma:</b> <span id="stat-palma">0</span> napot pipált ki</div>
         </div>
 
-        <!-- HETI NAPTÁR IRÁNYÍTÓ -->
         <div class="calendar-controls">
             <button class="nav-btn" onclick="changeWeek(-1)"><i class="fa-solid fa-chevron-left"></i></button>
             <h2 id="week-title" style="font-size: 1.3rem;">2026. Augusztus 24 - 30.</h2>
@@ -226,10 +223,7 @@
             </div>
         </div>
 
-        <!-- HETI NAPTÁR GRID -->
-        <div class="week-grid" id="week-container">
-            <!-- A JavaScript fogja felépíteni a napokat -->
-        </div>
+        <div class="week-grid" id="week-container"></div>
     </div>
 
     <!-- HÓNAP MODAL -->
@@ -243,16 +237,14 @@
         </div>
     </div>
 
-    <!-- DÍNOK A SAROKBAN -->
     <div class="dino-icon">🦖</div>
     <div class="dino-left">🦕</div>
 
-    <!-- FIREBASE SDK-k -->
+    <!-- FIREBASE -->
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
 
     <script>
-        // 1. FIREBASE BEÁLLÍTÁS A TE ADATAIDDAL
         const firebaseConfig = {
             apiKey: "AIzaSyC8X20G2wTZPx17VywN09I-LDpoi_x7rg4",
             authDomain: "veledujra-67cbf.firebaseapp.com",
@@ -265,9 +257,8 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        // VALTOZOK
         let currentUser = 'Tomi';
-        let currentWeekStart = new Date("2026-08-24"); // A pipálás első napjának hete
+        let currentWeekStart = new Date("2026-08-24");
         let completedDaysData = {};
         let notesData = {};
 
@@ -279,13 +270,18 @@
             "Imádom, hogy haladunk! ❤️"
         ];
 
-        // INTRO ANIMÁCIÓ INDÍTÁSA
+        // MAI DÁTUM BEÁLLÍTÁSA A LOGIN INPUT-BA
+        document.addEventListener("DOMContentLoaded", () => {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('login-date').value = today;
+        });
+
+        // INTRO IDŐZÍTŐ
         setTimeout(() => {
             document.getElementById('intro-overlay').style.display = 'none';
             document.getElementById('login-screen').style.display = 'flex';
-        }, 2800);
+        }, 2600);
 
-        // LOGIN ELLENŐRZÉS
         function checkLogin() {
             const val = document.getElementById('login-date').value;
             if (val === "2022-10-26") {
@@ -308,7 +304,6 @@
         }
 
         function initApp() {
-            // REALTIME ADATBÁZIS FIGYELÉSE
             db.ref('completed_days').on('value', (snapshot) => {
                 completedDaysData = snapshot.val() || {};
                 renderWeek();
@@ -321,14 +316,11 @@
             });
         }
 
-        // HETI NAPTÁR RENDERELÉSE
         function renderWeek() {
             const container = document.getElementById('week-container');
             container.innerHTML = '';
-
             const dayNames = ['Hétfő', 'Kedd', 'Szerda', 'Csütörtök', 'Péntek', 'Szombat', 'Vasárnap'];
             
-            // Hét címsor
             const endWeek = new Date(currentWeekStart);
             endWeek.setDate(endWeek.getDate() + 6);
             document.getElementById('week-title').innerText = 
@@ -337,12 +329,11 @@
             for (let i = 0; i < 7; i++) {
                 const d = new Date(currentWeekStart);
                 d.setDate(d.getDate() + i);
-                const dateKey = d.toISOString().split('T')[0]; // YYYY-MM-DD
+                const dateKey = d.toISOString().split('T')[0];
                 
                 const isChecked = !!completedDaysData[dateKey];
                 const checkedBy = isChecked ? completedDaysData[dateKey].by : '';
 
-                // Kártya HTML
                 const card = document.createElement('div');
                 card.className = `day-card ${isChecked ? 'completed' : ''}`;
                 
@@ -375,21 +366,17 @@
             }
         }
 
-        // PIPA KAPCSOLÁSA (VISSZAVONÁSNÁL RÁKÉRDEZÉSSEL)
         function toggleDay(dateKey, isChecked) {
-            // Ellenőrzés: 2026. augusztus 24 előtt nem pipálható
             if (dateKey < "2026-08-24") {
                 alert("A 365 napot csak 2026. augusztus 24-től lehet pipálni!");
                 return;
             }
 
             if (isChecked) {
-                // Visszavonási megerősítés
                 if (confirm("Biztosan vissza szeretnéd vonni ezt a pipát?")) {
                     db.ref(`completed_days/${dateKey}`).remove();
                 }
             } else {
-                // Pipálás + Cuki üzenet
                 const randomMsg = cuteMessages[Math.floor(Math.random() * cuteMessages.length)];
                 db.ref(`completed_days/${dateKey}`).set({
                     by: currentUser,
@@ -399,7 +386,6 @@
             }
         }
 
-        // MEGJEGYZÉS HOZZÁADÁSA
         function addNote(dateKey) {
             const text = prompt("Írj egy megjegyzést ehhez a naphoz:");
             if (text && text.trim() !== "") {
@@ -410,13 +396,11 @@
             }
         }
 
-        // LÉPTETÉS
         function changeWeek(direction) {
             currentWeekStart.setDate(currentWeekStart.getDate() + (direction * 7));
             renderWeek();
         }
 
-        // SZÁMLÁLÓ ÉS STATISZTIKA FRISSÍTÉSE
         function updateCounterAndStats() {
             const totalChecked = Object.keys(completedDaysData).length;
             const remaining = Math.max(0, 365 - totalChecked);
@@ -434,13 +418,11 @@
             document.getElementById('stat-palma').innerText = palmaCount;
         }
 
-        // HÓNAP MODAL KEZELÉS
         function openMonthModal() {
             const modal = document.getElementById('month-modal');
             const grid = document.getElementById('month-grid-container');
             grid.innerHTML = '';
             
-            // Megjelenítjük a jelenleg nézett hónap napjait (30 napot szemléltetésként)
             for (let i = 1; i <= 31; i++) {
                 const dayNum = i < 10 ? '0' + i : i;
                 const monthNum = (currentWeekStart.getMonth() + 1) < 10 ? '0' + (currentWeekStart.getMonth() + 1) : (currentWeekStart.getMonth() + 1);
