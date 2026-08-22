@@ -1,619 +1,67 @@
 <!DOCTYPE html>
 <html lang="hu">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pálma és Tomi ❤️ veledujra.hu</title>
-    
-    <link rel="icon" type="image/png" href="veledujra.png">
-    <meta property="og:image" content="veledujra.png">
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
-    
-    <style>
-        :root {
-            --bg-dark: #0f0c1b;
-            --card-bg: #18132a;
-            --card-inner: #221b3a;
-            --accent-main: #8b5cf6; /* Neutral Default: Purple */
-            --accent-pink: #ec4899;
-            --text-light: #f3f4f6;
-            --text-muted: #9ca3af;
-        }
-
-        body.theme-tomi {
-            --accent-main: #f97316; /* Tomi: Narancs */
-        }
-        body.theme-palma {
-            --accent-main: #06b6d4; /* Pálma: Kék */
-        }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Outfit', sans-serif; }
-        body { background-color: var(--bg-dark); color: var(--text-light); min-height: 100vh; overflow-x: hidden; transition: 0.5s; }
-
-        /* INTRO ANIMÁCIÓ */
-        #intro-overlay {
-            position: fixed; inset: 0; background: var(--bg-dark); z-index: 9999;
-            display: flex; align-items: center; justify-content: center;
-        }
-        .heart-wrapper {
-            position: relative; display: flex; align-items: center; justify-content: center;
-            animation: heartBeat 1.2s infinite ease-in-out;
-        }
-        .heart-svg { width: 220px; height: 220px; fill: var(--accent-pink); filter: drop-shadow(0 0 20px rgba(236, 72, 153, 0.8)); }
-        .intro-text {
-            position: absolute; font-size: 2.2rem; font-weight: 700; color: #fff;
-            text-shadow: 0 0 10px rgba(0,0,0,0.5); pointer-events: none;
-        }
-        @keyframes heartBeat {
-            0% { transform: scale(1); }
-            14% { transform: scale(1.15); }
-            28% { transform: scale(1); }
-            42% { transform: scale(1.15); }
-            70% { transform: scale(1); }
-        }
-
-        /* LOGIN / DÁTUM KAPU (ALAPÉRTELMEZETT SZÍN) */
-        #login-screen {
-            display: none; position: fixed; inset: 0; background: var(--bg-dark);
-            z-index: 8888; flex-direction: column; align-items: center; justify-content: center; gap: 20px;
-        }
-        .login-box {
-            background: var(--card-bg); padding: 40px; border-radius: 20px;
-            border: 1px solid #8b5cf6; text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5); max-width: 400px; width: 90%;
-        }
-        .login-box h2 { margin-bottom: 15px; color: var(--accent-pink); }
-        .date-input {
-            width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #8b5cf6;
-            background: var(--card-inner); color: #fff; font-size: 1.1rem; text-align: center; margin-bottom: 20px;
-        }
-        .btn {
-            background: linear-gradient(135deg, var(--accent-main), var(--accent-pink));
-            color: #fff; border: none; padding: 12px 25px; border-radius: 10px;
-            font-size: 1rem; font-weight: 600; cursor: pointer; transition: 0.3s;
-        }
-        .login-btn {
-            background: linear-gradient(135deg, #8b5cf6, var(--accent-pink));
-        }
-        .btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(236, 72, 153, 0.4); }
-
-        .check-anim { display: none; font-size: 4rem; color: #10b981; animation: popIn 0.5s ease; }
-        @keyframes popIn { 0% { transform: scale(0); } 80% { transform: scale(1.2); } 100% { transform: scale(1); } }
-
-        /* FŐOLDAL */
-        #main-app { display: none; padding: 20px; max-width: 1400px; margin: 0 auto; }
-        
-        header {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 20px 0; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 20px; gap: 15px; flex-wrap: wrap;
-        }
-        
-        /* FOTÓKERET BAL FENT */
-        .photo-frame-container {
-            position: relative; width: 80px; height: 100px; border-radius: 12px;
-            border: 2px solid var(--accent-main); overflow: hidden; box-shadow: 0 0 10px var(--accent-main);
-        }
-        .photo-frame-container img { width: 100%; height: 100%; object-fit: cover; }
-        .photo-nav {
-            position: absolute; inset: 0; display: flex; justify-content: space-between;
-            align-items: center; padding: 0 4px; opacity: 0; transition: 0.3s; background: rgba(0,0,0,0.3);
-        }
-        .photo-frame-container:hover .photo-nav { opacity: 1; }
-        .photo-btn { background: rgba(0,0,0,0.6); border: none; color: #fff; width: 20px; height: 20px; border-radius: 50%; cursor: pointer; font-size: 0.7rem; }
-
-        .logo-container { position: relative; padding: 10px 20px; }
-        .logo-text { font-size: 1.5rem; font-weight: 700; color: #fff; position: relative; z-index: 2; }
-        .neon-heart-border {
-            position: absolute; inset: 0; border: 2px solid var(--accent-main);
-            border-radius: 30px; box-shadow: 0 0 10px var(--accent-main);
-            animation: pulseNeon 2s infinite alternate;
-        }
-        @keyframes pulseNeon { from { opacity: 0.4; } to { opacity: 1; box-shadow: 0 0 15px var(--accent-main); } }
-
-        .top-counter {
-            font-size: 1.3rem; font-weight: 600; background: var(--card-bg);
-            padding: 10px 20px; border-radius: 30px; border: 1px solid var(--accent-main);
-        }
-
-        .user-selector { display: flex; gap: 10px; align-items: center; }
-        .user-btn {
-            background: var(--card-inner); border: 1px solid var(--accent-main);
-            color: #fff; padding: 8px 15px; border-radius: 8px; cursor: pointer; transition: 0.3s;
-        }
-        .user-btn.active { background: var(--accent-main); font-weight: bold; }
-
-        .stats-bar {
-            display: flex; gap: 20px; justify-content: center; margin-bottom: 20px;
-            background: var(--card-bg); padding: 15px; border-radius: 15px;
-        }
-
-        .today-banner { text-align: center; margin-bottom: 15px; font-size: 1.1rem; color: var(--accent-pink); font-weight: 600; }
-
-        .calendar-controls {
-            display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;
-        }
-        .nav-btn {
-            background: var(--card-bg); border: 1px solid var(--accent-main); color: #fff;
-            width: 40px; height: 40px; border-radius: 50%; cursor: pointer; font-size: 1.2rem;
-        }
-
-        .week-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 15px; margin-bottom: 30px; }
-        @media(max-width: 1024px) { .week-grid { grid-template-columns: 1fr; } }
-
-        .day-card {
-            background: var(--card-bg); border-radius: 16px; padding: 15px;
-            border: 1px solid rgba(255,255,255,0.05); min-height: 270px;
-            display: flex; flex-direction: column; justify-content: space-between; position: relative;
-        }
-        .day-card.completed { border-color: #10b981; background: #122420; }
-        .day-header { font-weight: 700; margin-bottom: 10px; display: flex; justify-content: space-between; }
-        
-        .notes-list { flex-grow: 1; margin-bottom: 10px; display: flex; flex-direction: column; gap: 8px; overflow-y: auto; max-height: 150px; }
-        .note-bubble {
-            background: var(--card-inner); padding: 8px; border-radius: 8px;
-            font-size: 0.8rem; word-break: break-word; border-left: 3px solid var(--accent-main); position: relative;
-        }
-        .note-reply { margin-left: 10px; margin-top: 4px; border-left: 2px solid var(--accent-pink); padding-left: 5px; font-size: 0.75rem; background: rgba(0,0,0,0.2); }
-        .note-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 4px; font-size: 0.75rem; }
-        .note-act-btn { cursor: pointer; opacity: 0.7; }
-        .note-act-btn:hover { opacity: 1; }
-
-        .check-btn {
-            width: 100%; padding: 10px; border-radius: 10px; border: none;
-            background: var(--card-inner); color: #fff; cursor: pointer;
-            font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px;
-        }
-        .day-card.completed .check-btn { background: #10b981; }
-
-        .add-note-btn {
-            background: none; border: 1px dashed var(--text-muted); color: var(--text-muted);
-            width: 100%; padding: 5px; border-radius: 6px; cursor: pointer; margin-bottom: 10px;
-        }
-
-        /* MAI HANGULAT DOBOZ */
-        .mood-box {
-            background: var(--card-bg); padding: 20px; border-radius: 16px;
-            border: 1px solid var(--accent-main); text-align: center; margin-bottom: 30px;
-        }
-        .mood-box h3 { margin-bottom: 10px; color: var(--accent-pink); }
-        .mood-options { display: flex; justify-content: center; gap: 15px; margin-bottom: 15px; flex-wrap: wrap; }
-        .mood-btn {
-            background: var(--card-inner); border: 1px solid var(--accent-main);
-            color: #fff; padding: 8px 15px; border-radius: 10px; cursor: pointer; transition: 0.2s;
-        }
-        .mood-btn:hover { background: var(--accent-main); }
-        .mood-reset-btn {
-            background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; color: #ef4444;
-        }
-        .mood-reset-btn:hover { background: #ef4444; color: #fff; }
-
-        .mood-status { display: flex; justify-content: space-around; font-size: 0.95rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px; margin-top: 10px; }
-
-        /* DÍNOK */
-        .dino-icon { position: fixed; bottom: 20px; right: 20px; font-size: 3rem; opacity: 0.8; pointer-events: none; }
-        .dino-left { position: fixed; bottom: 20px; left: 20px; font-size: 2.5rem; opacity: 0.8; pointer-events: none; }
-
-        /* CUSTOM EGYEDI POPUP MODALOK */
-        .custom-modal {
-            display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8);
-            z-index: 10000; align-items: center; justify-content: center;
-        }
-        .custom-modal-box {
-            background: var(--card-bg); padding: 25px; border-radius: 16px;
-            border: 1px solid var(--accent-main); max-width: 400px; width: 90%; text-align: center;
-        }
-        .custom-modal-box input {
-            width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--accent-main);
-            background: var(--card-inner); color: #fff; margin: 15px 0;
-        }
-        .custom-modal-actions { display: flex; gap: 10px; justify-content: center; }
-    </style>
+  <meta charset="UTF-8">
+  <title>Véled Újra</title>
 </head>
 <body>
 
-    <!-- 1. INTRO ANIMÁCIÓ -->
-    <div id="intro-overlay">
-        <div class="heart-wrapper">
-            <svg class="heart-svg" viewBox="0 0 24 24">
-                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-            </svg>
-            <div class="intro-text">P + T</div>
-        </div>
-    </div>
+  <h1>Élő Közös Weboldal</h1>
 
-    <!-- 2. BELÉPTETŐ KÉPERNYŐ (ALAPÉRTELMEZETT SZÍNNEL) -->
-    <div id="login-screen">
-        <div class="login-box">
-            <h2>Mikor kezdődött? ❤️</h2>
-            <p style="color: var(--text-muted); margin-bottom: 15px;">Válaszd ki a dátumot a belépéshez!</p>
-            <input type="date" id="login-date" class="date-input">
-            <br>
-            <button class="btn login-btn" onclick="checkLogin()">Belépés</button>
-            <div id="login-check-anim" class="check-anim" style="margin-top: 15px;">
-                <i class="fa-solid fa-circle-check"></i>
-            </div>
-        </div>
-    </div>
+  <!-- ÉLŐ PIPA -->
+  <label style="font-size: 20px;">
+    <input type="checkbox" id="sharedCheckbox">
+    Közös pipálandó feladat
+  </label>
 
-    <!-- 3. FŐ ALKALMAZÁS -->
-    <div id="main-app">
-        <header>
-            <!-- LAPOZTHATÓ FOTÓKERET -->
-            <div class="photo-frame-container">
-                <img id="current-photo" src="pic1.jpg" alt="Foto">
-                <div class="photo-nav">
-                    <button class="photo-btn" onclick="prevPhoto()"><i class="fa-solid fa-chevron-left"></i></button>
-                    <button class="photo-btn" onclick="nextPhoto()"><i class="fa-solid fa-chevron-right"></i></button>
-                </div>
-            </div>
+  <br><br>
 
-            <div class="logo-container">
-                <div class="neon-heart-border"></div>
-                <div class="logo-text">Pálma és Tomi</div>
-            </div>
+  <!-- ÉLŐ SZÖVEGDOBOZ -->
+  <label style="font-size: 20px;">
+    Közös üzenet / megjegyzés:<br>
+    <input type="text" id="sharedTextInput" placeholder="Írj ide valamit..." style="font-size: 16px; padding: 5px;">
+  </label>
 
-            <div class="top-counter" id="main-countdown">365 napból 365 maradt</div>
+  <!-- FIREBASE BETÖLTÉSE -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-            <div class="user-selector">
-                <span style="font-size: 0.9rem; color: var(--text-muted);">Ki vagy most?</span>
-                <button class="user-btn active" id="btn-tomi" onclick="setUser('Tomi')">Tomi 🦖</button>
-                <button class="user-btn" id="btn-palma" onclick="setUser('Pálma')">Pálma 🦕</button>
-            </div>
-        </header>
+    // A te projekted adatai
+    const firebaseConfig = {
+      projectId: "veledujra-67cbf"
+    };
 
-        <div class="stats-bar">
-            <div class="stat-item">🦖 <b>Tomi:</b> <span id="stat-tomi">0</span> napot pipált ki</div>
-            <div class="stat-item" style="border-left: 1px solid rgba(255,255,255,0.1); padding-left: 20px;">🦕 <b>Pálma:</b> <span id="stat-palma">0</span> napot pipált ki</div>
-        </div>
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
 
-        <div class="today-banner" id="today-banner-text">Ma 2026. Augusztus 22. van</div>
+    // Az adatbázis 'oldal' nevű gyűjteményének 'allapot' nevű dokumentuma
+    const docRef = doc(db, "oldal", "allapot");
 
-        <div class="calendar-controls">
-            <button class="nav-btn" onclick="changeWeek(-1)"><i class="fa-solid fa-chevron-left"></i></button>
-            <h2 id="week-title" style="font-size: 1.3rem;">2026. Augusztus 24 - 30.</h2>
-            <button class="nav-btn" onclick="changeWeek(1)"><i class="fa-solid fa-chevron-right"></i></button>
-        </div>
+    const checkbox = document.getElementById("sharedCheckbox");
+    const textInput = document.getElementById("sharedTextInput");
 
-        <div class="week-grid" id="week-container"></div>
-
-        <!-- MAI HANGULAT DOBOZ -->
-        <div class="mood-box">
-            <h3><i class="fa-solid fa-face-smile"></i> A mai hangulatom</h3>
-            <div class="mood-options">
-                <button class="mood-btn" onclick="setMood('1. Eddig jó 😊')">1. Eddig jó</button>
-                <button class="mood-btn" onclick="setMood('2. Volt már jobb is 😐')">2. Volt már jobb is</button>
-                <button class="mood-btn" onclick="setMood('3. Hol a kötél? ☠️')">3. Hol a kötél?</button>
-                <button class="mood-btn mood-reset-btn" onclick="resetMood()"><i class="fa-solid fa-rotate-left"></i> Visszavonás</button>
-            </div>
-            <div class="mood-status">
-                <div>🦖 <b>Tomi napja ma:</b> <span id="mood-tomi" style="color:var(--accent-pink);">Még nem tudjuk</span></div>
-                <div>🦕 <b>Pálma napja ma:</b> <span id="mood-palma" style="color:var(--accent-pink);">Még nem tudjuk</span></div>
-            </div>
-        </div>
-    </div>
-
-    <div class="dino-icon">🦖</div>
-    <div class="dino-left" id="left-dino">🦕</div>
-
-    <!-- EGYEDI DIALOG / POPUP MODAL -->
-    <div class="custom-modal" id="custom-modal">
-        <div class="custom-modal-box">
-            <h3 id="modal-title" style="margin-bottom:10px; color:var(--accent-pink);">Üzenet</h3>
-            <p id="modal-desc" style="font-size:0.95rem;"></p>
-            <input type="text" id="modal-input" style="display:none;" placeholder="Írj ide valamit...">
-            <div class="custom-modal-actions" id="modal-actions">
-                <button class="btn" onclick="closeCustomModal()">OK</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- FIREBASE -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
-
-    <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyC8X20G2wTZPx17VywN09I-LDpoi_x7rg4",
-            authDomain: "veledujra-67cbf.firebaseapp.com",
-            databaseURL: "https://veledujra-67cbf-default-rtdb.europe-west1.firebasedatabase.app/",
-            projectId: "veledujra-67cbf",
-            storageBucket: "veledujra-67cbf.firebasestorage.app",
-            messagingSenderId: "876403991342",
-            appId: "1:876403991342:web:b4555cad750fe2be5490bf"
-        };
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
-
-        let currentUser = 'Tomi';
-        let currentWeekStart = new Date("2026-08-24");
-        let completedDaysData = {};
-        let notesData = {};
-        let moodsData = {};
-
-        // LAPOZTHATÓ FOTÓK
-        const photos = ["pic1.jpg", "pic2.jpg"];
-        let currentPhotoIdx = 0;
-
-        function nextPhoto() {
-            currentPhotoIdx = (currentPhotoIdx + 1) % photos.length;
-            document.getElementById('current-photo').src = photos[currentPhotoIdx];
+    // 1. ÉLŐ FIGYELÉS: Amikor az adatbázisban változik valami, frissíti a képernyőt
+    onSnapshot(docRef, (docSnap) => {
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+        if (data.isPiped !== undefined) checkbox.checked = data.isPiped;
+        if (data.szoveg !== undefined && document.activeElement !== textInput) {
+          textInput.value = data.szoveg;
         }
-        function prevPhoto() {
-            currentPhotoIdx = (currentPhotoIdx - 1 + photos.length) % photos.length;
-            document.getElementById('current-photo').src = photos[currentPhotoIdx];
-        }
+      }
+    });
 
-        // EASTER EGG (7-SZER PÁLMA NEVÉRE KATTINTÁS)
-        let palmaClickCount = 0;
-        document.getElementById('btn-palma').addEventListener('click', () => {
-            palmaClickCount++;
-            if (palmaClickCount === 7) {
-                document.getElementById('left-dino').innerText = '💀';
-                showModal("Easter Egg Unlocked! 💀", "A bal alsó dinó átváltozott egy koponyává!");
-            }
-        });
+    // 2. KÜLDÉS: Ha valaki átpipálja a dobozt
+    checkbox.addEventListener("change", () => {
+      setDoc(docRef, { isPiped: checkbox.checked }, { merge: true });
+    });
 
-        const cuteMessages = [
-            "Ezaz! Máris egyel kevesebb! 🥰",
-            "Még egy nap kipipálva, szuper vagy! 💖",
-            "Egyre közelebb a célhoz! 🦖🦕",
-            "Újabb közös mérföldkő! ✨",
-            "Imádom, hogy haladunk! ❤️"
-        ];
+    // 3. KÜLDÉS: Ha valaki beír egy szöveget
+    textInput.addEventListener("input", () => {
+      setDoc(docRef, { szoveg: textInput.value }, { merge: true });
+    });
+  </script>
 
-        document.addEventListener("DOMContentLoaded", () => {
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('login-date').value = today;
-
-            const daysHU = ['Vasárnap', 'Hétfő', 'Kedd', 'Szerda', 'Csütörtök', 'Péntek', 'Szombat'];
-            const now = new Date();
-            document.getElementById('today-banner-text').innerText = 
-                `Ma ${now.getFullYear()}. ${now.getMonth()+1}.${now.getDate()}, ${daysHU[now.getDay()]} van.`;
-        });
-
-        setTimeout(() => {
-            document.getElementById('intro-overlay').style.display = 'none';
-            document.getElementById('login-screen').style.display = 'flex';
-        }, 2600);
-
-        function checkLogin() {
-            const val = document.getElementById('login-date').value;
-            if (val === "2022-10-26") {
-                const anim = document.getElementById('login-check-anim');
-                anim.style.display = 'block';
-                setTimeout(() => {
-                    document.getElementById('login-screen').style.display = 'none';
-                    document.getElementById('main-app').style.display = 'block';
-                    document.body.className = 'theme-tomi'; // SIKERES BELÉPÉS UTÁN TOMI A DEFAULT TÉMA
-                    initApp();
-                }, 1000);
-            } else {
-                showModal("Hiba", "Helytelen dátum! Próbáld újra ❤️");
-            }
-        }
-
-        function setUser(user) {
-            currentUser = user;
-            document.getElementById('btn-tomi').classList.toggle('active', user === 'Tomi');
-            document.getElementById('btn-palma').classList.toggle('active', user === 'Pálma');
-            
-            document.body.className = user === 'Tomi' ? 'theme-tomi' : 'theme-palma';
-        }
-
-        function initApp() {
-            db.ref('completed_days').on('value', (snapshot) => {
-                completedDaysData = snapshot.val() || {};
-                renderWeek();
-                updateCounterAndStats();
-            });
-
-            db.ref('notes').on('value', (snapshot) => {
-                notesData = snapshot.val() || {};
-                renderWeek();
-            });
-
-            const todayStr = new Date().toISOString().split('T')[0];
-            db.ref(`moods/${todayStr}`).on('value', (snapshot) => {
-                moodsData = snapshot.val() || {};
-                document.getElementById('mood-tomi').innerText = moodsData['Tomi'] || "Még nem tudjuk";
-                document.getElementById('mood-palma').innerText = moodsData['Pálma'] || "Még nem tudjuk";
-            });
-        }
-
-        function renderWeek() {
-            const container = document.getElementById('week-container');
-            container.innerHTML = '';
-            const dayNames = ['Hétfő', 'Kedd', 'Szerda', 'Csütörtök', 'Péntek', 'Szombat', 'Vasárnap'];
-            
-            const endWeek = new Date(currentWeekStart);
-            endWeek.setDate(endWeek.getDate() + 6);
-            document.getElementById('week-title').innerText = 
-                `${currentWeekStart.getFullYear()}. ${currentWeekStart.getMonth()+1}.${currentWeekStart.getDate()} - ${endWeek.getMonth()+1}.${endWeek.getDate()}.`;
-
-            for (let i = 0; i < 7; i++) {
-                const d = new Date(currentWeekStart);
-                d.setDate(d.getDate() + i);
-                const dateKey = d.toISOString().split('T')[0];
-                
-                const isChecked = !!completedDaysData[dateKey];
-                const checkedBy = isChecked ? completedDaysData[dateKey].by : '';
-
-                const card = document.createElement('div');
-                card.className = `day-card ${isChecked ? 'completed' : ''}`;
-                
-                let notesHtml = '';
-                if (notesData[dateKey]) {
-                    Object.keys(notesData[dateKey]).forEach(noteId => {
-                        const note = notesData[dateKey][noteId];
-                        let repliesHtml = '';
-                        if (note.replies) {
-                            Object.keys(note.replies).forEach(rId => {
-                                const rep = note.replies[rId];
-                                repliesHtml += `<div class="note-reply"><b>${rep.by}:</b> ${rep.text}</div>`;
-                            });
-                        }
-
-                        notesHtml += `
-                            <div class="note-bubble">
-                                <b>${note.by}:</b> ${note.text}
-                                ${repliesHtml}
-                                <div class="note-actions">
-                                    <span class="note-act-btn" onclick="replyNote('${dateKey}', '${noteId}')">💬 Válasz</span>
-                                    <span class="note-act-btn" onclick="deleteNote('${dateKey}', '${noteId}')">❌</span>
-                                </div>
-                            </div>`;
-                    });
-                }
-
-                card.innerHTML = `
-                    <div>
-                        <div class="day-header">
-                            <span>${dayNames[i]}</span>
-                            <span style="color:var(--text-muted); font-size:0.9rem;">${d.getMonth()+1}.${d.getDate()}</span>
-                        </div>
-                        <button class="add-note-btn" onclick="promptAddNote('${dateKey}')">+ Megjegyzés</button>
-                        <div class="notes-list">${notesHtml}</div>
-                    </div>
-                    <div>
-                        ${isChecked ? `<p style="font-size:0.75rem; color:#10b981; margin-bottom:5px; text-align:center;">Kipipálta: ${checkedBy}</p>` : ''}
-                        <button class="check-btn" onclick="toggleDay('${dateKey}', ${isChecked})">
-                            <i class="fa-solid ${isChecked ? 'fa-circle-check' : 'fa-circle'}"></i>
-                            ${isChecked ? 'Kipipálva' : 'Kipipálás'}
-                        </button>
-                    </div>
-                `;
-                container.appendChild(card);
-            }
-        }
-
-        function toggleDay(dateKey, isChecked) {
-            if (dateKey < "2026-08-24") {
-                showModal("Figyelem", "A 365 napot csak 2026. augusztus 24-től lehet pipálni!");
-                return;
-            }
-
-            if (isChecked) {
-                showConfirmModal("Megerősítés", "Biztosan vissza szeretnéd vonni ezt a pipát?", () => {
-                    db.ref(`completed_days/${dateKey}`).remove();
-                });
-            } else {
-                const randomMsg = cuteMessages[Math.floor(Math.random() * cuteMessages.length)];
-                db.ref(`completed_days/${dateKey}`).set({
-                    by: currentUser,
-                    timestamp: Date.now()
-                });
-                showModal("Szuper! ❤️", randomMsg);
-            }
-        }
-
-        function promptAddNote(dateKey) {
-            showInputModal("Megjegyzés hozzáadása", "Írj egy megjegyzést ehhez a naphoz:", (val) => {
-                if (val.trim()) {
-                    db.ref(`notes/${dateKey}`).push({
-                        by: currentUser,
-                        text: val.trim()
-                    });
-                }
-            });
-        }
-
-        function replyNote(dateKey, noteId) {
-            showInputModal("Válasz a megjegyzésre", "Írd le a válaszodat:", (val) => {
-                if (val.trim()) {
-                    db.ref(`notes/${dateKey}/${noteId}/replies`).push({
-                        by: currentUser,
-                        text: val.trim()
-                    });
-                }
-            });
-        }
-
-        function deleteNote(dateKey, noteId) {
-            showConfirmModal("Megjegyzés törlése", "Biztosan törölni szeretnéd ezt a megjegyzést?", () => {
-                db.ref(`notes/${dateKey}/${noteId}`).remove();
-            });
-        }
-
-        function setMood(moodText) {
-            const todayStr = new Date().toISOString().split('T')[0];
-            db.ref(`moods/${todayStr}/${currentUser}`).set(moodText);
-            showModal("Hangulat elmentve", `Beállítva: ${moodText}`);
-        }
-
-        function resetMood() {
-            const todayStr = new Date().toISOString().split('T')[0];
-            db.ref(`moods/${todayStr}/${currentUser}`).remove();
-            showModal("Hangulat törölve", "A mai hangulatod vissza lett vonva.");
-        }
-
-        function changeWeek(direction) {
-            currentWeekStart.setDate(currentWeekStart.getDate() + (direction * 7));
-            renderWeek();
-        }
-
-        function updateCounterAndStats() {
-            const totalChecked = Object.keys(completedDaysData).length;
-            const remaining = Math.max(0, 365 - totalChecked);
-            document.getElementById('main-countdown').innerText = `365 napból ${remaining} maradt`;
-
-            let tomiCount = 0;
-            let palmaCount = 0;
-
-            Object.values(completedDaysData).forEach(item => {
-                if (item.by === 'Tomi') tomiCount++;
-                if (item.by === 'Pálma') palmaCount++;
-            });
-
-            document.getElementById('stat-tomi').innerText = tomiCount;
-            document.getElementById('stat-palma').innerText = palmaCount;
-        }
-
-        /* CUSTOM MODAL KEZELÉS */
-        function showModal(title, desc) {
-            document.getElementById('modal-title').innerText = title;
-            document.getElementById('modal-desc').innerText = desc;
-            document.getElementById('modal-input').style.display = 'none';
-            document.getElementById('modal-actions').innerHTML = `<button class="btn" onclick="closeCustomModal()">OK</button>`;
-            document.getElementById('custom-modal').style.display = 'flex';
-        }
-
-        function showConfirmModal(title, desc, onConfirm) {
-            document.getElementById('modal-title').innerText = title;
-            document.getElementById('modal-desc').innerText = desc;
-            document.getElementById('modal-input').style.display = 'none';
-            document.getElementById('modal-actions').innerHTML = `
-                <button class="btn" style="background:#ef4444;" onclick="closeCustomModal()">Mégse</button>
-                <button class="btn" id="confirm-ok-btn">Igen</button>
-            `;
-            document.getElementById('confirm-ok-btn').onclick = () => {
-                onConfirm();
-                closeCustomModal();
-            };
-            document.getElementById('custom-modal').style.display = 'flex';
-        }
-
-        function showInputModal(title, desc, onSubmit) {
-            document.getElementById('modal-title').innerText = title;
-            document.getElementById('modal-desc').innerText = desc;
-            const input = document.getElementById('modal-input');
-            input.value = '';
-            input.style.display = 'block';
-            document.getElementById('modal-actions').innerHTML = `
-                <button class="btn" style="background:#ef4444;" onclick="closeCustomModal()">Mégse</button>
-                <button class="btn" id="input-ok-btn">Mentés</button>
-            `;
-            document.getElementById('input-ok-btn').onclick = () => {
-                onSubmit(input.value);
-                closeCustomModal();
-            };
-            document.getElementById('custom-modal').style.display = 'flex';
-        }
-
-        function closeCustomModal() {
-            document.getElementById('custom-modal').style.display = 'none';
-        }
-    </script>
 </body>
 </html>
