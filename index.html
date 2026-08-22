@@ -5,11 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pálma és Tomi ❤️ veledujra.hu</title>
     
-    <!-- Oldal ikona (Favicon) -->
     <link rel="icon" type="image/png" href="veledujra.png">
     <meta property="og:image" content="veledujra.png">
 
-    <!-- FontAwesome & Google Fonts -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
     
@@ -18,16 +16,23 @@
             --bg-dark: #0f0c1b;
             --card-bg: #18132a;
             --card-inner: #221b3a;
-            --accent-purple: #8b5cf6;
+            --accent-main: #f97316; /* Tomi default: Orange */
             --accent-pink: #ec4899;
             --text-light: #f3f4f6;
             --text-muted: #9ca3af;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Outfit', sans-serif; }
-        body { background-color: var(--bg-dark); color: var(--text-light); min-height: 100vh; overflow-x: hidden; }
+        body.theme-tomi {
+            --accent-main: #f97316; /* Narancs */
+        }
+        body.theme-palma {
+            --accent-main: #06b6d4; /* Kék */
+        }
 
-        /* INTRO ANIMÁCIÓ (P + T SZÍV DOBBANÁS) */
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Outfit', sans-serif; }
+        body { background-color: var(--bg-dark); color: var(--text-light); min-height: 100vh; overflow-x: hidden; transition: 0.5s; }
+
+        /* INTRO ANIMÁCIÓ */
         #intro-overlay {
             position: fixed; inset: 0; background: var(--bg-dark); z-index: 9999;
             display: flex; align-items: center; justify-content: center;
@@ -56,17 +61,17 @@
         }
         .login-box {
             background: var(--card-bg); padding: 40px; border-radius: 20px;
-            border: 1px solid rgba(139, 92, 246, 0.2); text-align: center;
+            border: 1px solid var(--accent-main); text-align: center;
             box-shadow: 0 10px 30px rgba(0,0,0,0.5); max-width: 400px; width: 90%;
         }
         .login-box h2 { margin-bottom: 15px; color: var(--accent-pink); }
         .date-input {
-            width: 100%; padding: 12px; border-radius: 10px; border: 1px solid var(--accent-purple);
+            width: 100%; padding: 12px; border-radius: 10px; border: 1px solid var(--accent-main);
             background: var(--card-inner); color: #fff; font-size: 1.1rem; text-align: center; margin-bottom: 20px;
         }
         .btn {
-            background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
-            color: #fff; border: none; padding: 12px 30px; border-radius: 10px;
+            background: linear-gradient(135deg, var(--accent-main), var(--accent-pink));
+            color: #fff; border: none; padding: 12px 25px; border-radius: 10px;
             font-size: 1rem; font-weight: 600; cursor: pointer; transition: 0.3s;
         }
         .btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(236, 72, 153, 0.4); }
@@ -79,41 +84,55 @@
         
         header {
             display: flex; justify-content: space-between; align-items: center;
-            padding: 20px 0; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 30px;
+            padding: 20px 0; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 20px; gap: 15px; flex-wrap: wrap;
         }
+        
+        /* FOTÓKERET BAL FENT */
+        .photo-frame-container {
+            position: relative; width: 80px; height: 100px; border-radius: 12px;
+            border: 2px solid var(--accent-main); overflow: hidden; box-shadow: 0 0 10px var(--accent-main);
+        }
+        .photo-frame-container img { width: 100%; height: 100%; object-fit: cover; }
+        .photo-nav {
+            position: absolute; inset: 0; display: flex; justify-content: space-between;
+            align-items: center; padding: 0 4px; opacity: 0; transition: 0.3s; background: rgba(0,0,0,0.3);
+        }
+        .photo-frame-container:hover .photo-nav { opacity: 1; }
+        .photo-btn { background: rgba(0,0,0,0.6); border: none; color: #fff; width: 20px; height: 20px; border-radius: 50%; cursor: pointer; font-size: 0.7rem; }
+
         .logo-container { position: relative; padding: 10px 20px; }
         .logo-text { font-size: 1.5rem; font-weight: 700; color: #fff; position: relative; z-index: 2; }
         .neon-heart-border {
-            position: absolute; inset: 0; border: 2px solid var(--accent-pink);
-            border-radius: 30px; box-shadow: 0 0 10px var(--accent-pink);
+            position: absolute; inset: 0; border: 2px solid var(--accent-main);
+            border-radius: 30px; box-shadow: 0 0 10px var(--accent-main);
             animation: pulseNeon 2s infinite alternate;
         }
-        @keyframes pulseNeon { from { opacity: 0.4; box-shadow: 0 0 5px var(--accent-pink); } to { opacity: 1; box-shadow: 0 0 15px var(--accent-pink); } }
+        @keyframes pulseNeon { from { opacity: 0.4; } to { opacity: 1; box-shadow: 0 0 15px var(--accent-main); } }
 
         .top-counter {
-            font-size: 1.4rem; font-weight: 600; background: var(--card-bg);
-            padding: 10px 25px; border-radius: 30px; border: 1px solid var(--accent-purple);
-            box-shadow: 0 0 15px rgba(139, 92, 246, 0.2);
+            font-size: 1.3rem; font-weight: 600; background: var(--card-bg);
+            padding: 10px 20px; border-radius: 30px; border: 1px solid var(--accent-main);
         }
 
         .user-selector { display: flex; gap: 10px; align-items: center; }
         .user-btn {
-            background: var(--card-inner); border: 1px solid var(--accent-purple);
-            color: #fff; padding: 8px 15px; border-radius: 8px; cursor: pointer;
+            background: var(--card-inner); border: 1px solid var(--accent-main);
+            color: #fff; padding: 8px 15px; border-radius: 8px; cursor: pointer; transition: 0.3s;
         }
-        .user-btn.active { background: var(--accent-purple); font-weight: bold; }
+        .user-btn.active { background: var(--accent-main); font-weight: bold; }
 
         .stats-bar {
-            display: flex; gap: 20px; justify-content: center; margin-bottom: 25px;
+            display: flex; gap: 20px; justify-content: center; margin-bottom: 20px;
             background: var(--card-bg); padding: 15px; border-radius: 15px;
         }
-        .stat-item { font-size: 1.1rem; }
+
+        .today-banner { text-align: center; margin-bottom: 15px; font-size: 1.1rem; color: var(--accent-pink); font-weight: 600; }
 
         .calendar-controls {
             display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;
         }
         .nav-btn {
-            background: var(--card-bg); border: 1px solid var(--accent-purple); color: #fff;
+            background: var(--card-bg); border: 1px solid var(--accent-main); color: #fff;
             width: 40px; height: 40px; border-radius: 50%; cursor: pointer; font-size: 1.2rem;
         }
 
@@ -122,18 +141,21 @@
 
         .day-card {
             background: var(--card-bg); border-radius: 16px; padding: 15px;
-            border: 1px solid rgba(255,255,255,0.05); min-height: 250px;
-            display: flex; flex-direction: column; justify-content: space-between;
-            transition: 0.3s; position: relative;
+            border: 1px solid rgba(255,255,255,0.05); min-height: 270px;
+            display: flex; flex-direction: column; justify-content: space-between; position: relative;
         }
         .day-card.completed { border-color: #10b981; background: #122420; }
         .day-header { font-weight: 700; margin-bottom: 10px; display: flex; justify-content: space-between; }
         
-        .notes-list { flex-grow: 1; margin-bottom: 10px; display: flex; flex-direction: column; gap: 8px; }
+        .notes-list { flex-grow: 1; margin-bottom: 10px; display: flex; flex-direction: column; gap: 8px; overflow-y: auto; max-height: 150px; }
         .note-bubble {
-            background: var(--card-inner); padding: 8px 10px; border-radius: 8px;
-            font-size: 0.85rem; word-break: break-word; border-left: 3px solid var(--accent-pink);
+            background: var(--card-inner); padding: 8px; border-radius: 8px;
+            font-size: 0.8rem; word-break: break-word; border-left: 3px solid var(--accent-main); position: relative;
         }
+        .note-reply { margin-left: 10px; margin-top: 4px; border-left: 2px solid var(--accent-pink); padding-left: 5px; font-size: 0.75rem; background: rgba(0,0,0,0.2); }
+        .note-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 4px; font-size: 0.75rem; }
+        .note-act-btn { cursor: pointer; opacity: 0.7; }
+        .note-act-btn:hover { opacity: 1; }
 
         .check-btn {
             width: 100%; padding: 10px; border-radius: 10px; border: none;
@@ -146,29 +168,44 @@
             background: none; border: 1px dashed var(--text-muted); color: var(--text-muted);
             width: 100%; padding: 5px; border-radius: 6px; cursor: pointer; margin-bottom: 10px;
         }
-        .add-note-btn:hover { border-color: var(--accent-pink); color: var(--accent-pink); }
 
+        /* MAI HANGULAT DOBOZ */
+        .mood-box {
+            background: var(--card-bg); padding: 20px; border-radius: 16px;
+            border: 1px solid var(--accent-main); text-align: center; margin-bottom: 30px;
+        }
+        .mood-box h3 { margin-bottom: 10px; color: var(--accent-pink); }
+        .mood-options { display: flex; justify-content: center; gap: 15px; margin-bottom: 15px; flex-wrap: wrap; }
+        .mood-btn {
+            background: var(--card-inner); border: 1px solid var(--accent-main);
+            color: #fff; padding: 8px 15px; border-radius: 10px; cursor: pointer; transition: 0.2s;
+        }
+        .mood-btn:hover { background: var(--accent-main); }
+        .mood-status { display: flex; justify-content: space-around; font-size: 0.95rem; border-top: 1px solid rgba(255,255,255,0.1); pt: 10px; margin-top: 10px; }
+
+        /* DÍNOK */
         .dino-icon { position: fixed; bottom: 20px; right: 20px; font-size: 3rem; opacity: 0.8; pointer-events: none; }
         .dino-left { position: fixed; bottom: 20px; left: 20px; font-size: 2.5rem; opacity: 0.8; pointer-events: none; }
 
-        #month-modal {
+        /* CUSTOM EGYEDI POPUP MODALOK (NINCS MEGGYŐZŐ BROWSER ALERT/PROMPT) */
+        .custom-modal {
             display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8);
-            z-index: 7777; align-items: center; justify-content: center;
+            z-index: 10000; align-items: center; justify-content: center;
         }
-        .modal-content {
-            background: var(--card-bg); padding: 30px; border-radius: 20px;
-            max-width: 800px; width: 90%; max-height: 80vh; overflow-y: auto;
+        .custom-modal-box {
+            background: var(--card-bg); padding: 25px; border-radius: 16px;
+            border: 1px solid var(--accent-main); max-width: 400px; width: 90%; text-align: center;
         }
-        .month-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; margin-top: 20px; }
-        .month-day-cell {
-            background: var(--card-inner); padding: 10px; border-radius: 8px; text-align: center; font-size: 0.9rem;
+        .custom-modal-box input {
+            width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--accent-main);
+            background: var(--card-inner); color: #fff; margin: 15px 0;
         }
-        .month-day-cell.done { background: #10b981; color: #fff; }
+        .custom-modal-actions { display: flex; gap: 10px; justify-content: center; }
     </style>
 </head>
-<body>
+<body class="theme-tomi">
 
-    <!-- 1. INTRO ANIMÁCIÓ (P + T PONTOSAN A SZÍV KÖZEPÉN) -->
+    <!-- 1. INTRO ANIMÁCIÓ -->
     <div id="intro-overlay">
         <div class="heart-wrapper">
             <svg class="heart-svg" viewBox="0 0 24 24">
@@ -178,7 +215,7 @@
         </div>
     </div>
 
-    <!-- 2. BELÉPTETŐ KÉPERNYŐ (MAI DÁTUM ALAPÉRTELMEZETTEN) -->
+    <!-- 2. BELÉPTETŐ KÉPERNYŐ -->
     <div id="login-screen">
         <div class="login-box">
             <h2>Mikor kezdődött? ❤️</h2>
@@ -195,6 +232,15 @@
     <!-- 3. FŐ ALKALMAZÁS -->
     <div id="main-app">
         <header>
+            <!-- LAPOZTHATÓ FOTÓKERET -->
+            <div class="photo-frame-container">
+                <img id="current-photo" src="pic1.jpg" alt="Foto">
+                <div class="photo-nav">
+                    <button class="photo-btn" onclick="prevPhoto()"><i class="fa-solid fa-chevron-left"></i></button>
+                    <button class="photo-btn" onclick="nextPhoto()"><i class="fa-solid fa-chevron-right"></i></button>
+                </div>
+            </div>
+
             <div class="logo-container">
                 <div class="neon-heart-border"></div>
                 <div class="logo-text">Pálma és Tomi</div>
@@ -214,31 +260,45 @@
             <div class="stat-item" style="border-left: 1px solid rgba(255,255,255,0.1); padding-left: 20px;">🦕 <b>Pálma:</b> <span id="stat-palma">0</span> napot pipált ki</div>
         </div>
 
+        <div class="today-banner" id="today-banner-text">Ma 2026. Augusztus 22. van</div>
+
         <div class="calendar-controls">
             <button class="nav-btn" onclick="changeWeek(-1)"><i class="fa-solid fa-chevron-left"></i></button>
             <h2 id="week-title" style="font-size: 1.3rem;">2026. Augusztus 24 - 30.</h2>
-            <div>
-                <button class="btn" style="padding: 8px 15px; margin-right: 10px;" onclick="openMonthModal()">Hónap nézet</button>
-                <button class="nav-btn" onclick="changeWeek(1)"><i class="fa-solid fa-chevron-right"></i></button>
-            </div>
+            <button class="nav-btn" onclick="changeWeek(1)"><i class="fa-solid fa-chevron-right"></i></button>
         </div>
 
         <div class="week-grid" id="week-container"></div>
-    </div>
 
-    <!-- HÓNAP MODAL -->
-    <div id="month-modal">
-        <div class="modal-content">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-                <h2 id="month-modal-title">Egész hónap</h2>
-                <button class="nav-btn" onclick="closeMonthModal()"><i class="fa-solid fa-xmark"></i></button>
+        <!-- MAI HANGULAT DOBOZ -->
+        <div class="mood-box">
+            <h3><i class="fa-solid fa-face-smile"></i> A mai hangulatom</h3>
+            <div class="mood-options">
+                <button class="mood-btn" onclick="setMood('1. Eddig jó 😊')">1. Eddig jó</button>
+                <button class="mood-btn" onclick="setMood('2. Volt már jobb is 😐')">2. Volt már jobb is</button>
+                <button class="mood-btn" onclick="setMood('3. Hol a kötél? 🪢')">3. Hol a kötél?</button>
             </div>
-            <div class="month-grid" id="month-grid-container"></div>
+            <div class="mood-status">
+                <div>🦖 <b>Tomi napja ma:</b> <span id="mood-tomi" style="color:var(--accent-pink);">Még nem tudjuk</span></div>
+                <div>🦕 <b>Pálma napja ma:</b> <span id="mood-palma" style="color:var(--accent-pink);">Még nem tudjuk</span></div>
+            </div>
         </div>
     </div>
 
     <div class="dino-icon">🦖</div>
-    <div class="dino-left">🦕</div>
+    <div class="dino-left" id="left-dino">🦕</div>
+
+    <!-- EGYEDI DIALOG / POPUP MODAL -->
+    <div class="custom-modal" id="custom-modal">
+        <div class="custom-modal-box">
+            <h3 id="modal-title" style="margin-bottom:10px; color:var(--accent-pink);">Üzenet</h3>
+            <p id="modal-desc" style="font-size:0.95rem;"></p>
+            <input type="text" id="modal-input" style="display:none;" placeholder="Írj ide valamit...">
+            <div class="custom-modal-actions" id="modal-actions">
+                <button class="btn" onclick="closeCustomModal()">OK</button>
+            </div>
+        </div>
+    </div>
 
     <!-- FIREBASE -->
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
@@ -261,6 +321,30 @@
         let currentWeekStart = new Date("2026-08-24");
         let completedDaysData = {};
         let notesData = {};
+        let moodsData = {};
+
+        // LAPOZTHATÓ FOTÓK
+        const photos = ["pic1.jpg", "pic2.jpg"];
+        let currentPhotoIdx = 0;
+
+        function nextPhoto() {
+            currentPhotoIdx = (currentPhotoIdx + 1) % photos.length;
+            document.getElementById('current-photo').src = photos[currentPhotoIdx];
+        }
+        function prevPhoto() {
+            currentPhotoIdx = (currentPhotoIdx - 1 + photos.length) % photos.length;
+            document.getElementById('current-photo').src = photos[currentPhotoIdx];
+        }
+
+        // EASTER EGG (7-SZER PÁLMA NEVÉRE KATTINTÁS)
+        let palmaClickCount = 0;
+        document.getElementById('btn-palma').addEventListener('click', () => {
+            palmaClickCount++;
+            if (palmaClickCount === 7) {
+                document.getElementById('left-dino').innerText = '💀';
+                showModal("Easter Egg Unlocked! 💀", "A bal alsó dinó átváltozott egy koponyává!");
+            }
+        });
 
         const cuteMessages = [
             "Ezaz! Máris egyel kevesebb! 🥰",
@@ -270,13 +354,16 @@
             "Imádom, hogy haladunk! ❤️"
         ];
 
-        // MAI DÁTUM BEÁLLÍTÁSA A LOGIN INPUT-BA
         document.addEventListener("DOMContentLoaded", () => {
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('login-date').value = today;
+
+            const daysHU = ['Vasárnap', 'Hétfő', 'Kedd', 'Szerda', 'Csütörtök', 'Péntek', 'Szombat'];
+            const now = new Date();
+            document.getElementById('today-banner-text').innerText = 
+                `Ma ${now.getFullYear()}. ${now.getMonth()+1}.${now.getDate()}, ${daysHU[now.getDay()]} van.`;
         });
 
-        // INTRO IDŐZÍTŐ
         setTimeout(() => {
             document.getElementById('intro-overlay').style.display = 'none';
             document.getElementById('login-screen').style.display = 'flex';
@@ -293,7 +380,7 @@
                     initApp();
                 }, 1000);
             } else {
-                alert("Helytelen dátum! Próbáld újra ❤️");
+                showModal("Hiba", "Helytelen dátum! Próbáld újra ❤️");
             }
         }
 
@@ -301,6 +388,8 @@
             currentUser = user;
             document.getElementById('btn-tomi').classList.toggle('active', user === 'Tomi');
             document.getElementById('btn-palma').classList.toggle('active', user === 'Pálma');
+            
+            document.body.className = user === 'Tomi' ? 'theme-tomi' : 'theme-palma';
         }
 
         function initApp() {
@@ -313,6 +402,13 @@
             db.ref('notes').on('value', (snapshot) => {
                 notesData = snapshot.val() || {};
                 renderWeek();
+            });
+
+            const todayStr = new Date().toISOString().split('T')[0];
+            db.ref(`moods/${todayStr}`).on('value', (snapshot) => {
+                moodsData = snapshot.val() || {};
+                document.getElementById('mood-tomi').innerText = moodsData['Tomi'] || "Még nem tudjuk";
+                document.getElementById('mood-palma').innerText = moodsData['Pálma'] || "Még nem tudjuk";
             });
         }
 
@@ -341,7 +437,23 @@
                 if (notesData[dateKey]) {
                     Object.keys(notesData[dateKey]).forEach(noteId => {
                         const note = notesData[dateKey][noteId];
-                        notesHtml += `<div class="note-bubble"><b>${note.by}:</b> ${note.text}</div>`;
+                        let repliesHtml = '';
+                        if (note.replies) {
+                            Object.keys(note.replies).forEach(rId => {
+                                const rep = note.replies[rId];
+                                repliesHtml += `<div class="note-reply"><b>${rep.by}:</b> ${rep.text}</div>`;
+                            });
+                        }
+
+                        notesHtml += `
+                            <div class="note-bubble">
+                                <b>${note.by}:</b> ${note.text}
+                                ${repliesHtml}
+                                <div class="note-actions">
+                                    <span class="note-act-btn" onclick="replyNote('${dateKey}', '${noteId}')">💬 Válasz</span>
+                                    <span class="note-act-btn" onclick="deleteNote('${dateKey}', '${noteId}')">❌</span>
+                                </div>
+                            </div>`;
                     });
                 }
 
@@ -351,7 +463,7 @@
                             <span>${dayNames[i]}</span>
                             <span style="color:var(--text-muted); font-size:0.9rem;">${d.getMonth()+1}.${d.getDate()}</span>
                         </div>
-                        <button class="add-note-btn" onclick="addNote('${dateKey}')">+ Megjegyzés</button>
+                        <button class="add-note-btn" onclick="promptAddNote('${dateKey}')">+ Megjegyzés</button>
                         <div class="notes-list">${notesHtml}</div>
                     </div>
                     <div>
@@ -368,32 +480,56 @@
 
         function toggleDay(dateKey, isChecked) {
             if (dateKey < "2026-08-24") {
-                alert("A 365 napot csak 2026. augusztus 24-től lehet pipálni!");
+                showModal("Figyelem", "A 365 napot csak 2026. augusztus 24-től lehet pipálni!");
                 return;
             }
 
             if (isChecked) {
-                if (confirm("Biztosan vissza szeretnéd vonni ezt a pipát?")) {
+                showConfirmModal("Megerősítés", "Biztosan vissza szeretnéd vonni ezt a pipát?", () => {
                     db.ref(`completed_days/${dateKey}`).remove();
-                }
+                });
             } else {
                 const randomMsg = cuteMessages[Math.floor(Math.random() * cuteMessages.length)];
                 db.ref(`completed_days/${dateKey}`).set({
                     by: currentUser,
                     timestamp: Date.now()
                 });
-                alert(randomMsg);
+                showModal("Szuper! ❤️", randomMsg);
             }
         }
 
-        function addNote(dateKey) {
-            const text = prompt("Írj egy megjegyzést ehhez a naphoz:");
-            if (text && text.trim() !== "") {
-                db.ref(`notes/${dateKey}`).push({
-                    by: currentUser,
-                    text: text.trim()
-                });
-            }
+        function promptAddNote(dateKey) {
+            showInputModal("Megjegyzés hozzáadása", "Írj egy megjegyzést ehhez a naphoz:", (val) => {
+                if (val.trim()) {
+                    db.ref(`notes/${dateKey}`).push({
+                        by: currentUser,
+                        text: val.trim()
+                    });
+                }
+            });
+        }
+
+        function replyNote(dateKey, noteId) {
+            showInputModal("Válasz a megjegyzésre", "Írd le a válaszodat:", (val) => {
+                if (val.trim()) {
+                    db.ref(`notes/${dateKey}/${noteId}/replies`).push({
+                        by: currentUser,
+                        text: val.trim()
+                    });
+                }
+            });
+        }
+
+        function deleteNote(dateKey, noteId) {
+            showConfirmModal("Megjegyzés törlése", "Biztosan törölni szeretnéd ezt a megjegyzést?", () => {
+                db.ref(`notes/${dateKey}/${noteId}`).remove();
+            });
+        }
+
+        function setMood(moodText) {
+            const todayStr = new Date().toISOString().split('T')[0];
+            db.ref(`moods/${todayStr}/${currentUser}`).set(moodText);
+            showModal("Hangulat elmentve", `Beállítva: ${moodText}`);
         }
 
         function changeWeek(direction) {
@@ -418,28 +554,49 @@
             document.getElementById('stat-palma').innerText = palmaCount;
         }
 
-        function openMonthModal() {
-            const modal = document.getElementById('month-modal');
-            const grid = document.getElementById('month-grid-container');
-            grid.innerHTML = '';
-            
-            for (let i = 1; i <= 31; i++) {
-                const dayNum = i < 10 ? '0' + i : i;
-                const monthNum = (currentWeekStart.getMonth() + 1) < 10 ? '0' + (currentWeekStart.getMonth() + 1) : (currentWeekStart.getMonth() + 1);
-                const dateKey = `${currentWeekStart.getFullYear()}-${monthNum}-${dayNum}`;
-                const isDone = !!completedDaysData[dateKey];
-
-                const cell = document.createElement('div');
-                cell.className = `month-day-cell ${isDone ? 'done' : ''}`;
-                cell.innerText = i;
-                grid.appendChild(cell);
-            }
-
-            modal.style.display = 'flex';
+        /* CUSTOM MODAL KEZELÉS (NINCS CSÚNYA ALAPÉRTELMEZETT BROWSER DIALOG) */
+        function showModal(title, desc) {
+            document.getElementById('modal-title').innerText = title;
+            document.getElementById('modal-desc').innerText = desc;
+            document.getElementById('modal-input').style.display = 'none';
+            document.getElementById('modal-actions').innerHTML = `<button class="btn" onclick="closeCustomModal()">OK</button>`;
+            document.getElementById('custom-modal').style.display = 'flex';
         }
 
-        function closeMonthModal() {
-            document.getElementById('month-modal').style.display = 'none';
+        function showConfirmModal(title, desc, onConfirm) {
+            document.getElementById('modal-title').innerText = title;
+            document.getElementById('modal-desc').innerText = desc;
+            document.getElementById('modal-input').style.display = 'none';
+            document.getElementById('modal-actions').innerHTML = `
+                <button class="btn" style="background:#ef4444;" onclick="closeCustomModal()">Mégse</button>
+                <button class="btn" id="confirm-ok-btn">Igen</button>
+            `;
+            document.getElementById('confirm-ok-btn').onclick = () => {
+                onConfirm();
+                closeCustomModal();
+            };
+            document.getElementById('custom-modal').style.display = 'flex';
+        }
+
+        function showInputModal(title, desc, onSubmit) {
+            document.getElementById('modal-title').innerText = title;
+            document.getElementById('modal-desc').innerText = desc;
+            const input = document.getElementById('modal-input');
+            input.value = '';
+            input.style.display = 'block';
+            document.getElementById('modal-actions').innerHTML = `
+                <button class="btn" style="background:#ef4444;" onclick="closeCustomModal()">Mégse</button>
+                <button class="btn" id="input-ok-btn">Mentés</button>
+            `;
+            document.getElementById('input-ok-btn').onclick = () => {
+                onSubmit(input.value);
+                closeCustomModal();
+            };
+            document.getElementById('custom-modal').style.display = 'flex';
+        }
+
+        function closeCustomModal() {
+            document.getElementById('custom-modal').style.display = 'none';
         }
     </script>
 </body>
